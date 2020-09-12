@@ -1,29 +1,35 @@
 class Token {
-    constructor(config) {
+    constructor(config, initializer) {
         this.config = config;
-    }
-
-    init() {
-        throw new Error('no impl');
+        if (typeof initializer === 'function') {
+            this.initializer = initializer;
+        } else {
+            this.initializer = () => {
+                return Promise.resolve(initializer);
+            }
+        }
     }
 
     get() {
-        const { access_token, modified, expires } = this.config.loadSync();
-        if (access_token && modified + expires > Date.now()) {
+        const { access_token, modified, expires_in } = this.config.loadSync();
+        if (access_token && modified + expires_in > Date.now()) {
             return Promise.resolve({
                 access_token
             });
         } else {
-            return this.init().then(({ access_token, expires }) => {
-                config.dump({
-                    access_token,
-                    expires,
-                    modified: Date.now()
+            return this.initializer()
+                .then(({ access_token, expires_in }) => {
+                    this.config.dumpSync({
+                        access_token,
+                        expires_in,
+                        modified: Date.now()
+                    });
+                    return {
+                        access_token: access_token
+                    };
                 });
-                return {
-                    access_token: access_token
-                };
-            });
         }
     }
 }
+
+module.exports = Token;
