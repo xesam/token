@@ -1,4 +1,7 @@
 class Token {
+    /**
+     * initializer's return : {access_token, expires_in}
+     * */
     constructor(config, initializer) {
         this.config = config;
         if (typeof initializer === 'function') {
@@ -11,22 +14,20 @@ class Token {
     }
 
     get() {
-        const { access_token, modified, expires_in } = this.config.loadSync();
+        const {access_token, modified, expires_in} = this.config.loadSync();
         if (access_token && modified + expires_in > Date.now()) {
             return Promise.resolve({
                 access_token
             });
         } else {
+            const modified = Date.now();
             return this.initializer()
-                .then(({ access_token, expires_in }) => {
-                    this.config.dumpSync({
+                .then(({access_token, expires_in}) => {
+                    return this.config.dump({
                         access_token,
                         expires_in,
-                        modified: Date.now()
+                        modified
                     });
-                    return {
-                        access_token: access_token
-                    };
                 });
         }
     }
