@@ -1,13 +1,14 @@
 {
   "name": "@xesam/token",
   "version": "0.0.2",
-  "description": "a simple token config",
+  "description": "a simple token helper",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "@xesam/config": "0.0.2"
+  "dependencies": {},
+  "devDependencies": {
+    "@xesam/config": "0.0.3"
   },
   "repository": {
     "type": "git",

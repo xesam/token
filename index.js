@@ -1,1 +1,2 @@
-module.exports = require('./src/token');
+exports.AbsToken = require('./src/AbsToken');
+exports.Token = require('./src/Token');
